@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,114 +8,222 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Professional CV',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primarySwatch: Colors.blueGrey,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: 'sans-serif',
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const CVPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class CVPage extends StatelessWidget {
+  const CVPage({super.key});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  // Helper method to launch URLs
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text('$_counter', style: Theme.of(context).textTheme.headlineMedium),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 30),
+              _buildSectionTitle('Professional Summary'),
+              const SizedBox(height: 8),
+              // TODO: Add your professional summary here
+              const Text(
+                'A highly motivated and results-oriented professional with 5+ years of experience in software development in France. Seeking to leverage my expertise in a challenging role within a dynamic Moroccan company. Fluent in French, Arabic, and English.',
+                textAlign: TextAlign.justify,
+                style: TextStyle(fontSize: 16, height: 1.5),
+              ),
+              const SizedBox(height: 30),
+              _buildSectionTitle('Work Experience'),
+              // TODO: Add your work experience here
+              _buildExperienceItem(
+                company: 'Tech Solutions SARL, Paris, France',
+                role: 'Senior Software Engineer',
+                period: 'Jan 2019 - Present',
+                description:
+                    '- Led the development of a cross-platform mobile application using Flutter.\n- Collaborated with a team of 5 developers to deliver high-quality software.\n- Mentored junior developers and conducted code reviews.',
+              ),
+              _buildExperienceItem(
+                company: 'Innovatech, Lyon, France',
+                role: 'Software Developer',
+                period: 'Jun 2016 - Dec 2018',
+                description:
+                    '- Developed and maintained web applications using Dart and Angular.\n- Contributed to the full software development lifecycle.',
+              ),
+              const SizedBox(height: 30),
+              _buildSectionTitle('Education'),
+              // TODO: Add your education details here
+              _buildEducationItem(
+                institution: 'University of Paris-Saclay, France',
+                degree: 'Master of Science in Computer Science',
+                period: '2014 - 2016',
+              ),
+              const SizedBox(height: 30),
+              _buildSectionTitle('Skills'),
+              const SizedBox(height: 10),
+              // TODO: Add your skills here
+              _buildSkillsGrid([
+                'Flutter', 'Dart', 'Firebase', 'REST APIs', 'Git',
+                'Agile Methodologies', 'Problem Solving', 'Teamwork'
+              ]),
+              const SizedBox(height: 30),
+              _buildSectionTitle('Languages'),
+              const SizedBox(height: 10),
+              // TODO: Add your languages here
+              _buildLanguageItem('Arabic', 'Native'),
+              _buildLanguageItem('French', 'Fluent'),
+              _buildLanguageItem('English', 'Professional Working Proficiency'),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // TODO: Add your name here
+        const Text(
+          'YOUR NAME',
+          style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        // TODO: Add your job title here
+        const Text(
+          'Senior Flutter Developer',
+          style: TextStyle(fontSize: 20, color: Colors.blueGrey),
+        ),
+        const SizedBox(height: 20),
+        // TODO: Add your contact information here
+        _buildContactInfo(Icons.phone, '+33 6 12 34 56 78', 'tel:+33612345678'),
+        const SizedBox(height: 8),
+        _buildContactInfo(Icons.email, 'your.email@example.com', 'mailto:your.email@example.com'),
+        const SizedBox(height: 8),
+        _buildContactInfo(Icons.location_on, 'Paris, France', ''),
+        const SizedBox(height: 8),
+        _buildContactInfo(Icons.link, 'linkedin.com/in/yourprofile', 'https://linkedin.com/in/yourprofile'),
+      ],
+    );
+  }
+
+  Widget _buildContactInfo(IconData icon, String text, String url) {
+    return InkWell(
+      onTap: url.isNotEmpty ? () => _launchURL(url) : null,
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.blueGrey, size: 20),
+          const SizedBox(width: 12),
+          Text(text, style: const TextStyle(fontSize: 16)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title.toUpperCase(),
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 1.5,
+        color: Colors.blueGrey,
+      ),
+    );
+  }
+
+  Widget _buildExperienceItem({required String company, required String role, required String period, required String description}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$role | $company',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            period,
+            style: const TextStyle(fontSize: 14, color: Colors.grey),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            description,
+            style: const TextStyle(fontSize: 16, height: 1.4),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEducationItem({required String institution, required String degree, required String period}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            degree,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            institution,
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            period,
+            style: const TextStyle(fontSize: 14, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSkillsGrid(List<String> skills) {
+    return Wrap(
+      spacing: 12.0,
+      runSpacing: 12.0,
+      children: skills.map((skill) => Chip(
+        label: Text(skill),
+        backgroundColor: Colors.blueGrey.withOpacity(0.1),
+        labelStyle: const TextStyle(color: Colors.blueGrey),
+      )).toList(),
+    );
+  }
+
+  Widget _buildLanguageItem(String language, String proficiency) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Text('$language: ', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(proficiency, style: const TextStyle(fontSize: 16)),
+        ],
+      ),
     );
   }
 }
